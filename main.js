@@ -1,13 +1,37 @@
-import colors from './data.js'
-console.log(colors);
+import colors from './data.js';
+import refs from './refs.js';
+
+const { body, btnStart, btnStop } = refs;
+let interwalId = null;
+
+const rememberColor = localStorage.getItem('bgColor')
+if (rememberColor !== null) {
+    body.setAttribute('style', rememberColor)
+};
+
+btnStart.addEventListener('click', onBtnStartClick);
+btnStop.addEventListener('click', onBtnStopClic);
 
 
-// Напиши скрипт, который после нажатия кнопки Start, раз в секунду меняет цвет фона body на случайное значение из массива используя инлайн-стиль. При нажатии на кнопку Stop, изменение цвета фона должно останавливаться.
+function onBtnStartClick(e) {
+    e.target.disabled = true
+  interwalId = setInterval(() => {
+    const color = getRandomColor(randomIntegerFromInterval(0,5), colors)
+    body.setAttribute('style', `background-color: ${color}`)
+    }, 1000);
 
-// ⚠️ Учти, на кнопку Start можно нажать бесконечное количество раз. Сделай так, чтобы пока изменение темы запушено, кнопка Start была не активна.
-
-// Для генерации случайного числа (индекс элемента массива цветов), используй функцию randomIntegerFromInterval.
-
-const randomIntegerFromInterval = (min, max) => {
+};
+function onBtnStopClic() {
+    btnStart.disabled = false
+    clearInterval(interwalId)
+    // body.removeAttribute('style')
+    
+    localStorage.setItem('bgColor', body.getAttribute('style'));
+    };
+function getRandomColor(clbRandomNumber, array) {
+    const randomIndex = clbRandomNumber;
+    return array.find((el, index, array) => index === randomIndex ? el : undefined)
+};
+function randomIntegerFromInterval(min, max){
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
